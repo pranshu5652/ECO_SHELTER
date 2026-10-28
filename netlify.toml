@@ -1,10 +1,13 @@
-[build]
-  # Path to your frontend app relative to the repo root
+﻿[build]
   base    = "frontend/client"
   command = "npm run build"
   publish = "dist"
 
-# SPA fallback � redirect every route to index.html so React Router works
+# Node version to match .nvmrc
+[build.environment]
+  NODE_VERSION = "18"
+
+# SPA fallback — all routes go to index.html for React Router
 [[redirects]]
   from   = "/*"
   to     = "/index.html"
