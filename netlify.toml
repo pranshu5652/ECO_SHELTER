@@ -1,0 +1,11 @@
+[build]
+  # Path to your frontend app relative to the repo root
+  base    = "frontend/client"
+  command = "npm run build"
+  publish = "dist"
+
+# SPA fallback — redirect every route to index.html so React Router works
+[[redirects]]
+  from   = "/*"
+  to     = "/index.html"
+  status = 200
