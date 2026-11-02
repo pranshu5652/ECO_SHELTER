@@ -114,3 +114,16 @@ app.include_router(forecast_router, prefix="/api", tags=["Forecast Backup"])
 async def health() -> dict:
     """Returns 200 OK when the service is running."""
     return {"status": "ok"}
+
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
+app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["https://ecoshelterlive24.netlify.app/", "http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
