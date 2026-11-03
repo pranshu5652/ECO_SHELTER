@@ -81,9 +81,26 @@ app = FastAPI(
 # CORS
 # ---------------------------------------------------------------------------
 
+# Origins allowed to call this API from a browser.
+# NOTE: no trailing "/" at the end of any URL.
+EXTRA_ORIGINS = [
+    "https://ecoshelterlive24.netlify.app",  # deployed frontend (Netlify)
+    "http://localhost:5173",  # Vite dev server
+    "http://localhost:5500",  # simple http.server dev
+]
+
+# Keep whatever is already configured in settings, and add the ones above.
+_configured = settings.ALLOWED_ORIGINS
+if isinstance(_configured, str):
+    _configured = [o.strip() for o in _configured.split(",") if o.strip()]
+
+ALLOWED_ORIGINS = list(
+    dict.fromkeys([o.rstrip("/") for o in list(_configured) + EXTRA_ORIGINS])
+)
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.ALLOWED_ORIGINS,
+    allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -114,16 +131,3 @@ app.include_router(forecast_router, prefix="/api", tags=["Forecast Backup"])
 async def health() -> dict:
     """Returns 200 OK when the service is running."""
     return {"status": "ok"}
-
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-
-app = FastAPI()
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["https://ecoshelterlive24.netlify.app/", "http://localhost:5173"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
